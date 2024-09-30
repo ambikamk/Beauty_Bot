@@ -1,0 +1,98 @@
+{% block content %}
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 2.5rem;
+    }
+
+    .details-section {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      margin: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .details-section > div {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .details-section img {
+      width: 90%;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .add-to-cart-button {
+      display: block;
+      margin-top: 20px;
+      padding: 15px 30px;
+      background-color: #4caf50;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      font-size: 1.5rem;
+      width: 50%;
+    }
+
+    .add-to-cart-button:hover {
+      background-color: #45a049;
+    }
+
+    .details-section p {
+      margin: 0;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+  </style>
+
+  <h1>{{ product.title }}</h1>
+  <div class="details-section">
+    <div>
+      <p><b>{{ product.description }}</b></p>
+      <p><b>Name: </b>{{ product.name }}</p>
+      <p><b>Price:</b> {{ product.price }}</p>
+      <p><b>Expiry Date:</b> {{ product.expiry_date }}</p>
+      <p><b>Stock: </b>{{ product.quantity_in_stock }}</p>
+      <p><b>Brand:</b> {{ product.brand }}</p>
+      <p><b>Skin concern:</b> {{ product.skin_concern }}</p>
+      <p><b>Skin type: </b>{{ product.skin_type }}</p>
+      <p><b>Product type:</b> {{ product.product_type }}</p>
+      <p><b>Ingredients: </b>{{ product.ingredients }}</p>
+      <p><b>Country of origin: </b>{{ product.country_of_origin }}</p>
+      {% if product.quantity_in_stock == 0 %}
+                                            <span class="stock-status" style="font-size: larger; color: brown;">Out of Stock</span>
+                                        {% elif product.quantity_in_stock < product.reorder_level %}
+                                            <span class="stock-status" style="font-size: larger; color: brown;">Limited Stock</span>
+                                        {% endif %}
+                                        {% if product.quantity_in_stock > 0 %}
+      
+      
+    </div>
+    <div>
+      <img src="{{ product.image.url }}" alt="{{ product.title }}">
+      <center><a href="{% url 'add_to_cart' %}" class="add-to-cart-button">Add to Cart</a></center>
+      {% endif %}
+     
+      
+    </div>
+  </div>
+{% endblock %}

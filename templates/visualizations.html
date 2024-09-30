@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizations</title>
+    
+    <!-- Include Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts for elegant typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Inline CSS for additional styling -->
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6f7;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+        h1 {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            font-size: 2.5em;
+            color: #444;
+            position: relative;
+        }
+        h1::after {
+            content: "";
+            width: 60px;
+            height: 4px;
+            background-color: #ff6f61;
+            display: block;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+        .chart-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        .chart-card h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+            font-weight: 600;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .chart-container {
+                gap: 20px;
+                padding: 10px;
+            }
+            .chart-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Visualizations</h1>
+
+    <div class="container">
+        <div class="chart-container">
+            <!-- Bar chart for skin concern distribution -->
+            <div class="chart-card">
+                <h3>Skin Concern Distribution</h3>
+                <canvas id="barChart"></canvas>
+            </div>
+
+            <!-- Pie chart for skin type distribution -->
+            <div class="chart-card">
+                <h3>Skin Type Distribution</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
+
+            <!-- Line chart for brand popularity -->
+            <div class="chart-card">
+                <h3>Brand Popularity</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Utility function to generate random colors
+        function getRandomColor(opacity) {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+            return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        }
+
+        // Bar Chart (Skin Concern Distribution)
+        const barChartDataRaw = JSON.parse('{{ skin_concern_data|escapejs }}');
+        const barChartLabels = barChartDataRaw.map(item => item.skin_concern);
+        const barChartValues = barChartDataRaw.map(item => item.count);
+        const barColors = barChartLabels.map(() => getRandomColor(0.6));
+        const barBorderColors = barColors.map(color => color.replace('0.6', '1'));
+
+        const barChartData = {
+            labels: barChartLabels,
+            datasets: [{
+                label: 'Number of Cases',
+                data: barChartValues,
+                backgroundColor: barColors,
+                borderColor: barBorderColors,
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Cases'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Skin Concerns'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Pie Chart (Skin Type Distribution)
+        const pieChartDataRaw = JSON.parse('{{ skin_type_data|escapejs }}');
+        const pieChartLabels = pieChartDataRaw.map(item => item.skin_type);
+        const pieChartValues = pieChartDataRaw.map(item => item.count);
+        const pieColors = pieChartLabels.map(() => getRandomColor(0.7));
+        const pieBorderColors = pieColors.map(color => color.replace('0.7', '1'));
+
+        const pieChartData = {
+            labels: pieChartLabels,
+            datasets: [{
+                data: pieChartValues,
+                backgroundColor: pieColors,
+                borderColor: pieBorderColors,
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: pieChartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 20,
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.chart._metasets[context.datasetIndex].total;
+                                const percentage = ((value / total) * 100).toFixed(2) + '%';
+                                return `${label}: ${percentage}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Line Chart (Brand Popularity)
+        const lineChartDataRaw = JSON.parse('{{ brand_data|escapejs }}');
+        const lineChartLabels = lineChartDataRaw.map(item => item.brand);
+        const lineChartValues = lineChartDataRaw.map(item => item.total_stock);
+        const lineColors = {
+            border: '#28a745',
+            background: 'rgba(40, 167, 69, 0.2)'
+        };
+
+        const lineChartData = {
+            labels: lineChartLabels,
+            datasets: [{
+                label: 'Total Stock',
+                data: lineChartValues,
+                backgroundColor: lineColors.background,
+                borderColor: lineColors.border,
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        };
+
+        new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: lineChartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Stock'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Brands'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% load jazzmin %} {% if card %}
+{% if card_header and fieldset.name %}
+{{ fieldset.name }}{% if fieldset.description %} - {{ fieldset.description }}{% endif %}
+{%elif fieldset.description %}
+{{ fieldset.description }}
+{%endif%}
+{% endif %} {% for line in fieldset %}
+{% for field in line %} {{ field.field.label|capfirst }} {% if field.field.field.required %} * {% endif %}
+{% if field.is_readonly %}
+{{ field.contents }}
+{% else %} {{ field.field }} {% endif %}
+{% if not line.fields|length == 1 and not field.is_readonly %}{{ field.errors }}{% endif %}
+{% if field.field.help_text %}
+{{ field.field.help_text|safe }}
+{% endif %}
+{% if line.fields|length == 1 %}{{ line.errors }}{% endif %}
+{% endfor %}
+{% endfor %} {% if card %}
+{% endif %}

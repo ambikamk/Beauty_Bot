@@ -1,0 +1,494 @@
+{% extends 'theme.html' %}
+
+{% load static %}
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+ 
+</head>
+
+{% block title %}Home{% endblock title %}
+
+
+
+{% block content %}
+  <style>
+    .product-card {
+      background-image: url('https://media.istockphoto.com/id/1141698953/photo/spa-products-for-home-skin-care.jpg?s=612x612&w=0&k=20&c=HxtIt73MwCZBY0APYngv0poZCEtyDhckTuT8SxJSxPE=');
+      background-size: cover;
+      width: 80%;
+      margin-bottom: 20px;
+      height: 400px; /* Set the desired height for the cards */
+    }
+
+    .product-image {
+      width: 100%;
+      height: 250px; /* Set the desired height */
+      object-fit: cover;
+    }
+
+    .product-buttons {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .btn-primary {
+      background-color: #0e9220; /* Primary color for buttons */
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #f40ea4; /* Darker shade on hover */
+    }
+
+    .shop-title {
+      margin: 0;
+      padding: 10px;
+      cursor: pointer;
+      background-color: #074e0d;
+    }
+
+    .shop-link {
+      padding: 0;
+      margin: 0;
+      display: none; /* Hide initially */
+    }
+
+    .shop-link li {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .shop-link li a {
+      text-decoration: none;
+      color: #333;
+      display: block;
+      padding: 10px;
+    }
+
+    .col-md-3 {
+      flex: 0 0 calc(33.33% - 20px); /* Adjusted width with space */
+      max-width: calc(33.33% - 20px); /* Adjusted max-width with space */
+      padding: 0 10px; /* Added padding for space between products */
+
+    }
+
+    .swiper-container {
+    width: 100%;
+    height: 700px; /* Adjust the height as needed */
+    margin-bottom: 20px;
+  }
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .shop-title {
+      color: white; /* Change category text color to white */
+    }
+
+    .hero {
+            background-image: url('https://media.istockphoto.com/id/1163013366/photo/natural-cosmetics.jpg?s=612x612&w=0&k=20&c=zuj4jsweHCRUtxtZTF1PV6NaA0OF4OIoKjrmkK3PuEo=');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 20px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            margin: 0 0 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            background-color: #ff69b4;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #ff85c0;
+        }
+
+        .features {
+          
+            background-color: #f3a1e5;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        .feature-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ff69b4;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .chat-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #ff69b4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .chat-icon i {
+      font-size: 24px; /* Icon size */
+      color: #fff; /* Icon color */
+    }
+
+    .chat-window {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 300px;
+      max-height: 400px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .chat-header {
+      background-color: #ff69b4;
+      color: #fff;
+      padding: 10px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .chat-body {
+      padding: 10px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .chat-input button {
+      margin-left: 5px;
+      background-color: #ff69b4;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background-color: #ff85c0;
+    }
+
+    
+
+
+
+  </style>
+  
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="{% static 'banner 2.png' %}" alt="Banner 1"></div>
+        <div class="swiper-slide"><img src="{% static 'banner2.jpg' %}" alt="Banner 2"></div>
+        <div class="swiper-slide"><img src="{% static 'banner3.png' %}" alt="Banner 3"></div>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+     
+
+  <div class="shop-widget">
+    <h3 class="shop-title">Categories</h3>
+  
+    <ul class="shop-link">
+      {% for category in categories %}
+        <li>
+          <a href="{% url 'category_products' category.id %}">
+            <h6>{{ category.category_name }}</h6>
+          </a>
+          <ul>
+            {% for subcategory in category.subcategory_set.all %}
+              <li>
+                <a href="{% url 'subcategory_products' subcategory.id %}">
+                  {{ subcategory.subcategory_name }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <section class="hero">
+    <div class="hero-content">
+        <h2>Discover the Perfect Skincare Products</h2>
+        <p>Get personalized recommendations based on your skin type, concerns, and preferences. Beauty Bot is here to help you shine.</p>
+        <a href="{% url 'beauty_product_recommendation' %}" class="cta-button">Start Your Journey</a>
+        <a href="https://beautyappuctrecommendation-wb9nky2uxbm8vzshhd2xnb.streamlit.app/" class="cta-button">Dataset Recommendation</a>
+    </div>
+</section>
+  
+
+  <div class="container mt-40 mb-40">
+    <div class="row">
+      {% for product in products %}
+        <div class="col-md-3 mt-3">
+          <div class="card product-card position-relative">
+            <img src="{{ product.image.url }}" class="card-img img-fluid product-image" alt="{{ product.name }}">
+            <span class="wishlist-icon position-absolute top-0 start-0"> 
+              
+              <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-primary">
+                <i class="fas fa-heart"></i>
+            </a>
+            </span>
+            {% if product.quantity_in_stock == 0 %}
+                                            <span class="stock-status" style="font-size: larger; color: rgba(97, 4, 4, 0.721);">Out of Stock</span>
+                                        {% elif product.quantity_in_stock < product.reorder_level %}
+                                            <span class="stock-status" style="font-size: larger; color: rgba(167, 5, 5, 0.679);">Limited Stock</span>
+                                        {% endif %}
+            <div class="card-body bg-light text-center">
+              <h5 class="card-title"><a href="{% url 'product_details' product.id %}">{{ product.name }}</a></h5>
+              <p class="card-text">₹{{ product.price }}</p>
+              {% if product.quantity_in_stock > 0 %}
+            </div>
+            <div class="product-buttons">
+              <form id="add-to-cart-form" action="{% url 'add_to_cart' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" id="cart-button" class="btn btn-primary btn-add-to-cart">Add to Cart</button>
+                {% endif %}
+              </form>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="chat-icon" id="chatIcon">
+    <i class="fas fa-comments"></i> <!-- Better suited icon -->
+    <div class="tooltip" id="tooltip">We're Online! How may I help you today?</div>
+  </div>
+  
+  <!-- Optional: Chat window can be hidden or displayed as needed -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">Chat with Us</div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-input">
+      <input type="text" id="userMessage" placeholder="Type your message...">
+      <button id="sendMessage">Send</button>
+    </div>
+  </div>
+  
+  <div class="row mt-5">
+    <center><h2>Inspired Picks</h2></center>
+    {% if similar_products.exists %}
+        {% for product in similar_products %}
+            <div class="col-md-3 mt-3">
+                <div class="card product-card position-relative">
+                    <img src="{{ product.image.url }}" class="card-img img-fluid product-image" alt="{{ product.name }}">
+                    <!-- <span class="wishlist-icon position-absolute top-0 start-0">
+                        <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-primary">
+                            <i class="fas fa-heart"></i>
+                        </a> -->
+                    </span>
+                    <!-- {% if product.quantity_in_stock == 0 %}
+                        <span class="stock-status" style="font-size: larger; color: brown;">Out of Stock</span>
+                    {% elif product.quantity_in_stock < product.reorder_level %}
+                        <span class="stock-status" style="font-size: larger; color: brown;">Limited Stock</span>
+                    {% endif %} -->
+                    <div class="card-body bg-light text-center">
+                        <h5 class="card-title"><a href="{% url 'product_details' product.id %}">{{ product.name }}</a></h5>
+                        <p class="card-text">₹{{ product.price }}</p>
+                        <!-- {% if product.quantity_in_stock > 0 %}
+                            <div class="product-buttons"> -->
+                                <!-- <form id="add-to-cart-form" action="{% url 'add_to_cart' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" id="cart-button" class="btn btn-primary btn-add-to-cart">Add to Cart</button>
+                                </form> -->
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-12 text-center mt-3">
+          <a href="{% url 'similar_products' %}" >View More</a>
+      </div>
+    {% else %}
+        <p>No similar products found.</p>
+    {% endif %}
+</div>
+</div>
+
+
+  
+  
+  <section class="features">
+    <h2>Why Choose Beauty Bot?</h2>
+    <div class="feature-cards">
+        <div class="card">
+            <h3>Personalized Recommendations</h3>
+            <p>Our advanced AI analyzes your skin profile to suggest products tailored to your unique needs.</p>
+        </div>
+        <div class="card">
+            <h3>Trusted Brands</h3>
+            <p>We only recommend products from reputable brands known for quality and effectiveness.</p>
+        </div>
+        <div class="card">
+          <h3>High-Quality Ingredients</h3>
+          <p>We prioritize products with natural, safe, and effective ingredients to nourish and protect your skin.</p>
+        </div>
+    </div>
+</section>
+</main>
+<footer>
+<p>&copy; 2024 Beauty Bot. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+</footer>
+
+  <script>
+    // JavaScript for collapsible div
+    document.addEventListener("DOMContentLoaded", function() {
+      var shopTitle = document.querySelector('.shop-title');
+      var shopLink = document.querySelector('.shop-link');
+      
+      shopTitle.addEventListener('click', function() {
+        if (shopLink.style.display === 'none') {
+          shopLink.style.display = 'block';
+        } else {
+          shopLink.style.display = 'none';
+        }
+      });
+    });
+
+    var swiper = new Swiper('.swiper-container', {
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        autoplay: {
+            delay: 5000,
+        },
+    });
+    // Redirect to chatbot page when chat icon is clicked
+  document.getElementById('chatIcon').onclick = function() {
+    window.location.href = '/chat/'; // Replace '/chatbot/' with the actual URL of your chatbot page
+  };
+
+  // Show tooltip on hover
+  const chatIcon = document.getElementById('chatIcon');
+  const tooltip = document.getElementById('tooltip');
+
+  chatIcon.onmouseover = function() {
+    tooltip.style.display = 'block'; // Show the tooltip on hover
+  };
+
+  chatIcon.onmouseout = function() {
+    tooltip.style.display = 'none'; // Hide the tooltip when not hovering
+  };
+   
+  </script>
+
+{% endblock %}

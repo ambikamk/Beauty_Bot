@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    
+    <!-- Google Fonts for elegant typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inline CSS for additional styling -->
+    <style>
+        /* General Styling */
+        body {
+            
+            font-family: 'Poppins', sans-serif;
+            background-color: #e1ebf5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://images.everydayhealth.com/images/skin-beauty/what-are-natural-skin-care-products-alt-1440x810.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Overlay for better readability */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        /* Chat Container Styling */
+        .chat-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Chat Header */
+        .chat-header {
+            text-align: center;
+            font-weight: 600;
+            color: #f438c8;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        /* Chat Box Styling */
+        .chat-box {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            overflow-y: auto;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            max-height: 300px;
+        }
+
+        /* Message Styling */
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #fa24da;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 15px 15px 0px 15px;
+            max-width: 75%;
+            word-wrap: break-word;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #1a7810;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 15px 15px 15px 0px;
+            max-width: 75%;
+            word-wrap: break-word;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        /* Slide-in Animation */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Input Container Styling */
+        .input-container {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .input-box {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-box:focus {
+            border-color: #f235d2;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Send Button Styling */
+        .send-button {
+            margin-left: 10px;
+            background-color: #f91fc9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            background-color: #f444f4;
+            transform: scale(1.05);
+        }
+
+        /* Icon within Send Button */
+        .send-button i {
+            margin-left: 5px;
+        }
+
+        /* Scrollbar Styling */
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .chat-container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            .chat-header {
+                font-size: 1.3em;
+            }
+
+            .send-button {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Chatbot</div>
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will be appended here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="user-input" class="input-box" placeholder="Type your message...">
+            <button class="send-button" onclick="sendMessage()">
+                Send <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Function to retrieve CSRF token from cookies
+        function getCSRFToken() {
+            const name = 'csrftoken';
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    return decodeURIComponent(cookie.substring(name.length + 1));
+                }
+            }
+            return '';
+        }
+
+        // Function to append messages to chat box
+        function appendMessage(message, className) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + className;
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Function to send message
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value.trim();
+            if (message === '') return;
+
+            // Append user message
+            appendMessage(message, 'user-message');
+            userInput.value = '';
+
+            // Send message to server via fetch
+            fetch('{% url "chat" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: new URLSearchParams({
+                    'message': message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Append bot response
+                appendMessage(data.reply, 'bot-message');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                appendMessage('Sorry, something went wrong. Please try again later.', 'bot-message');
+            });
+        }
+
+        // Allow sending message by pressing Enter key
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Product Recommendation</title>
+    
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts for elegant typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome CDN for icons (Optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inline CSS for additional styling -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            
+            /* Background Image Properties */
+            background-image: url('https://media.istockphoto.com/id/1163013366/photo/natural-cosmetics.jpg?s=612x612&w=0&k=20&c=zuj4jsweHCRUtxtZTF1PV6NaA0OF4OIoKjrmkK3PuEo='); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(245, 246, 247, 0.8); /* Adjust opacity for desired effect */
+            z-index: -1;
+        }
+
+        .container-fluid {
+            padding: 30px;
+        }
+        .sidebar {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .btn-submit {
+            background-color: #f437d4;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-submit:hover {
+            background-color: #f45ec7;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f1f7fd;
+            border-left: 5px solid #1d9013;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar h2, .main-content h1 {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .main-content h4 {
+            color: #f12fba;
+            margin-bottom: 10px;
+        }
+        input, select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            
+            <!-- Sidebar for User Input -->
+            <div class="col-md-4 sidebar">
+                <h2>Customize Your Skincare</h2>
+                <form method="POST" action="{% url 'beauty_product_recommendation' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="skin_type" class="form-label">Skin Type:</label>
+                        <select id="skin_type" name="skin_type" class="form-select" required>
+                            <option value="" disabled selected>Select your skin type</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Oily">Oily</option>
+                            <option value="Dry">Dry</option>
+                            <option value="Combination">Combination</option>
+                            <option value="Sensitive">Sensitive</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="skin_concern" class="form-label">Skin Concern:</label>
+                        <input type="text" id="skin_concern" name="skin_concern" class="form-control" placeholder="e.g., Acne, Wrinkles" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ingredients" class="form-label">Preferred Ingredients:</label>
+                        <input type="text" id="ingredients" name="ingredients" class="form-control" placeholder="e.g., Vitamin C, Hyaluronic Acid" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="brand" class="form-label">Favorite Brand:</label>
+                        <input type="text" id="brand" name="brand" class="form-control" placeholder="e.g., Brand X" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="product_type" class="form-label">Product Type:</label>
+                        <select id="product_type" name="product_type" class="form-select" required>
+                            <option value="" disabled selected>Select product type</option>
+                            <option value="Moisturizer">Moisturizer</option>
+                            <option value="Cleanser">Cleanser</option>
+                            <option value="Serum">Serum</option>
+                            <option value="Sunscreen">Sunscreen</option>
+                            <option value="Toner">Toner</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price Range:</label>
+                        <input type="text" id="price" name="price" class="form-control" placeholder="e.g., 10-50" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating Range:</label>
+                        <input type="text" id="rating" name="rating" class="form-control" placeholder="e.g., 4-5" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Get Recommendation</button>
+                </form>
+            </div>
+
+            <!-- Main content area for displaying results -->
+            <div class="col-md-7 main-content">
+                <h1>Personalized Beauty Recommendations</h1>
+                <p>Submit the form on the left to get tailored beauty product suggestions based on your preferences and skin profile.</p>
+
+                <!-- Display the recommendation if it exists -->
+                {% if recommendation %}
+                    <div class="result">
+                        <h4>Recommended Product:</h4>
+                        <p>{{ recommendation }}</p>
+                    </div>
+                {% endif %}
+
+                <!-- Display the usage description if it exists -->
+                {% if usage_description %}
+                    <div class="result">
+                        <h4>How to Use:</h4>
+                        <p>{{ usage_description }}</p>
+                    </div>
+                {% endif %}
+
+                <!-- Display the skincare tips if they exist -->
+                {% if skincare_tips %}
+                    <div class="result">
+                        <h4>Skincare Tips:</h4>
+                        <p>{{ skincare_tips }}</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optional for interactive components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

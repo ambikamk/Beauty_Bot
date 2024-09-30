@@ -1,0 +1,66 @@
+<!-- your_app/templates/recommendation_report.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Beauty Product Recommendations</title>
+   
+    <style>
+        /* Basic styling for the report */
+        .product {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .product img {
+            max-width: 150px;
+            height: auto;
+        }
+        .product-details {
+            display: flex;
+            align-items: center;
+        }
+        .product-info {
+            margin-left: 20px;
+        }
+        .product-info h2 {
+            margin: 0;
+        }
+        .product-info p {
+            margin: 5px 0;
+        }
+        .product-link {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Personalized Beauty Product Recommendations</h1>
+    {% if recommended_products %}
+        {% for product in recommended_products %}
+            <div class="product">
+                <div class="product-details">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.product_name }}">
+                    {% endif %}
+                    <div class="product-info">
+                        <h2>{{ product.product_name }}</h2>
+                        <p><strong>Brand:</strong> {{ product.brand }}</p>
+                        <p><strong>Price:</strong> ${{ product.price }}</p>
+                        <p><strong>Rating:</strong> {{ product.rating }} / 5</p>
+                        <p><strong>Ingredients:</strong> {{ product.ingredients }}</p>
+                        <div class="product-link">
+                            <a href="{{ product.product_link }}" target="_blank">View Product</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No recommendations available at this time.</p>
+    {% endif %}
+    <a href="{% url 'beauty_product_recommendation' %}">Back to Recommendation Form</a>
+</body>
+</html>
